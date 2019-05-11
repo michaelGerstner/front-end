@@ -1,16 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { bool } from 'prop-types';
 import { Field } from 'formik';
 import * as Yup from 'yup';
 import { updateUser } from 'common/constants/api';
 import { validationErrorMessages } from 'common/constants/messages';
 import Input from 'components/Form/Input/Input';
 import Select from 'components/Form/Select/Select';
-import styles from './steps.css';
+import styles from './_steps.css';
 
 class MilitaryDetails extends React.Component {
   static propTypes = {
-    isSubmitting: PropTypes.bool,
+    isSubmitting: bool,
   };
 
   static defaultProps = {
@@ -32,7 +32,7 @@ class MilitaryDetails extends React.Component {
 
   static submitHandler = async values => {
     console.log('Values at MilitaryDetails:', values);
-    await updateUser(values);
+    // await updateUser(values);
   };
 
   render() {

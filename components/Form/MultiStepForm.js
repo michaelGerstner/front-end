@@ -1,6 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { arrayOf, func, object } from 'prop-types';
 import get from 'lodash/get';
+import noop from 'lodash/noop';
 import { Formik } from 'formik';
 import { getErrorMessage } from 'common/utils/api-utils';
 import { validStep } from 'common/constants/custom-props';
@@ -10,19 +11,27 @@ import Form from 'components/Form/Form';
 import Alert from 'components/Alert/Alert';
 import styles from './MultiStepForm.css';
 
+// TODO: PREVENT BEING ABLE TO GO BACK TO FIRST STEP
+
 class MultiStepForm extends React.Component {
   static propTypes = {
     // initialValues must be object where entire form's shape is described
-    initialValues: PropTypes.object.isRequired,
+    initialValues: object.isRequired,
 
-    onFinalSubmit: PropTypes.func.isRequired,
-    onFinalSubmitSuccess: PropTypes.func.isRequired,
-    steps: PropTypes.arrayOf(validStep).isRequired,
+    onStepSubmit: func,
+    onFinalSubmit: func.isRequired,
+    onFinalSubmitSuccess: func,
+    steps: arrayOf(validStep).isRequired,
+  };
+
+  static defaultProps = {
+    onStepSubmit: noop,
+    onFinalSubmitSuccess: noop,
   };
 
   state = {
-    stepNumber: 0,
     errorMessage: '',
+    stepNumber: 0,
   };
 
   isLastStep = () => {
@@ -69,13 +78,15 @@ class MultiStepForm extends React.Component {
   };
 
   handleSubmit = async (values, formikBag) => {
-    const { steps, onFinalSubmit, onFinalSubmitSuccess } = this.props;
+    const { steps, onStepSubmit, onFinalSubmit, onFinalSubmitSuccess } = this.props;
     const { errorMessage, stepNumber } = this.state;
 
     if (errorMessage) {
       // reset error message each submit
       this.setState({ errorMessage: '' });
     }
+
+    onStepSubmit(values);
 
     if (this.isLastStep()) {
       try {
@@ -110,6 +121,12 @@ class MultiStepForm extends React.Component {
     const CurrentStep = steps[stepNumber];
     const isFirstStep = stepNumber === 0;
 
+    /*
+     * If a step has to have props passed to its component, it needs to be passed in as an
+     * object with a render prop passed to a render key (and initialValues and submitHandler
+     * mapped)
+     */
+
     return (
       <Formik
         initialValues={initialValues}
@@ -117,7 +134,7 @@ class MultiStepForm extends React.Component {
         onSubmit={this.handleSubmit}
         render={formikBag => (
           <Form className={styles.MultiStepForm} onSubmit={formikBag.handleSubmit}>
-            <CurrentStep {...formikBag} />
+            {CurrentStep.render ? CurrentStep.render(...formikBag) : <CurrentStep {...formikBag} />}
 
             <div className={styles.errorMessage}>
               <Alert isOpen={Boolean(errorMessage)} type="error">

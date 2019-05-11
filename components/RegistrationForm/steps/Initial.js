@@ -1,5 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { bool } from 'prop-types';
+import classNames from 'classnames';
 import { Field } from 'formik';
 import * as Yup from 'yup';
 import { createUser } from 'common/constants/api';
@@ -7,11 +8,11 @@ import { validationErrorMessages } from 'common/constants/messages';
 import { minimumPasswordLength } from 'common/constants/validations';
 import { isMinPasswordStrength, isValidZipcode } from 'common/utils/validator-utils';
 import Input from 'components/Form/Input/Input';
-import styles from './steps.css';
+import styles from './_steps.css';
 
-class InitialStep extends React.Component {
+class Initial extends React.Component {
   static propTypes = {
-    isSubmitting: PropTypes.bool,
+    isSubmitting: bool,
   };
 
   static defaultProps = {
@@ -46,7 +47,8 @@ class InitialStep extends React.Component {
   };
 
   static submitHandler = async values => {
-    await createUser(values);
+    console.log('values at Initial', values);
+    // await createUser(values);
   };
 
   render() {
@@ -96,7 +98,7 @@ class InitialStep extends React.Component {
           />
         </div>
 
-        <div className={(styles.row, styles.pulledLeft)}>
+        <div className={classNames(styles.row, styles.pulledLeft)}>
           <Field
             type="text"
             name="zipcode"
@@ -111,4 +113,4 @@ class InitialStep extends React.Component {
   }
 }
 
-export default InitialStep;
+export default Initial;

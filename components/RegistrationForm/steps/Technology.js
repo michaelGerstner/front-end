@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { bool } from 'prop-types';
 import { Field } from 'formik';
 import * as Yup from 'yup';
 import { updateUser } from 'common/constants/api';
 import { mapStringsToSelectOptions } from 'common/utils/array-utils';
 import Select from 'components/Form/Select/Select';
-import styles from './steps.css';
+import styles from './_steps.css';
 
 const programmingLanguageOptions = [
   'JavaScript',
@@ -21,20 +21,22 @@ const programmingLanguageOptions = [
 
 const disciplineOptions = [
   'Web Developer',
-  'Web Designer',
-  'Front-end Developer',
-  'Back-end Developer',
-  'Full-stack Developer',
-  'Mobile / IOS',
-  'Mobile / Android',
-  'I.T. / Sysadmin',
+  'Front-End Developer',
+  'Back-End Developer',
+  'Full-Stack Developer',
+  'Mobile: iOS',
+  'Mobile: Android',
+  'Information Technology / System Administration',
   'Cyber Security',
   'Data Science',
+  'Designer',
+  'Product Management',
+  'Agile / Scrum Management',
 ];
 
 class Technology extends React.Component {
   static propTypes = {
-    isSubmitting: PropTypes.bool,
+    isSubmitting: bool,
   };
 
   static defaultProps = {
@@ -53,7 +55,7 @@ class Technology extends React.Component {
 
   static submitHandler = async values => {
     console.log('Values at Technology:', values);
-    await updateUser(values);
+    // await updateUser(values);
   };
 
   render() {
