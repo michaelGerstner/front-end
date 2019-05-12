@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { bool } from 'prop-types';
 import { Field } from 'formik';
 import * as Yup from 'yup';
 import { updateUser } from 'common/constants/api';
@@ -10,7 +10,7 @@ import styles from './_steps.css';
 
 class PersonalDetails extends React.Component {
   static propTypes = {
-    isSubmitting: PropTypes.bool,
+    isSubmitting: bool,
   };
 
   static defaultProps = {
