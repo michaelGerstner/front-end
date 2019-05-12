@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { updateUser } from 'common/constants/api';
 import { mapStringsToSelectOptions } from 'common/utils/array-utils';
 import Select from 'components/Form/Select/Select';
-import styles from './steps.css';
+import styles from './_steps.css';
 
 const programmingLanguageOptions = [
   'JavaScript',

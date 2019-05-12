@@ -7,7 +7,7 @@ import { validationErrorMessages } from 'common/constants/messages';
 import { minimumPasswordLength } from 'common/constants/validations';
 import { isMinPasswordStrength, isValidZipcode } from 'common/utils/validator-utils';
 import Input from 'components/Form/Input/Input';
-import styles from './steps.css';
+import styles from './_steps.css';
 
 class InitialStep extends React.Component {
   static propTypes = {

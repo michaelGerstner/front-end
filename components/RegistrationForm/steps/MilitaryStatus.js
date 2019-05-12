@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { updateUser } from 'common/constants/api';
 import { validationErrorMessages } from 'common/constants/messages';
 import Select from 'components/Form/Select/Select';
-import styles from './steps.css';
+import styles from './_steps.css';
 
 class MilitaryStatus extends React.Component {
   static propTypes = {
