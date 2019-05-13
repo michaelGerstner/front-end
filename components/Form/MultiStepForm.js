@@ -12,6 +12,8 @@ import Alert from 'components/Alert/Alert';
 import ScreenReaderOnly from 'components/ScreenReaderOnly/ScreenReaderOnly';
 import styles from './MultiStepForm.css';
 
+// TODO: PREVENT BEING ABLE TO GO BACK TO FIRST STEP
+
 class MultiStepForm extends React.Component {
   static propTypes = {
     // initialValues must be object where entire form's shape is described
@@ -99,6 +101,8 @@ class MultiStepForm extends React.Component {
       this.setState({ errorMessage: '' });
     }
 
+    onStepSubmit(values);
+
     if (this.isLastStep()) {
       try {
         await onFinalSubmit(values);
@@ -134,6 +138,12 @@ class MultiStepForm extends React.Component {
     const CurrentStep = steps[stepNumber];
     const isFirstStep = stepNumber === 0;
 
+    /*
+     * If a step has to have props passed to its component, it needs to be passed in as an
+     * object with a render prop passed to a render key (and initialValues and submitHandler
+     * mapped)
+     */
+
     return (
       <Formik
         initialValues={initialValues}
@@ -141,7 +151,7 @@ class MultiStepForm extends React.Component {
         onSubmit={this.handleSubmit}
         render={formikBag => (
           <Form className={styles.MultiStepForm} onSubmit={formikBag.handleSubmit}>
-            <CurrentStep {...formikBag} />
+            {CurrentStep.render ? CurrentStep.render(...formikBag) : <CurrentStep {...formikBag} />}
 
             <div className={styles.errorMessage}>
               <Alert isOpen={Boolean(errorMessage)} type="error">
