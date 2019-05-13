@@ -45,7 +45,6 @@ function ThemedReactSelect({ disabled, hasErrors, isTouched, ...props }) {
             fontSize: '1.125rem',
             marginTop: '0.25rem',
             marginBottom: '1rem',
-            minWidth: '250px',
             padding: '0.25rem',
             opacity: disabled ? '0.5' : '1',
             outline: 'none',

@@ -6,6 +6,7 @@ import { updateUser } from 'common/constants/api';
 import { validationErrorMessages } from 'common/constants/messages';
 import Input from 'components/Form/Input/Input';
 import Select from 'components/Form/Select/Select';
+import wait from 'test-utils/wait';
 import styles from './_steps.css';
 
 class MilitaryDetails extends React.Component {
@@ -32,7 +33,8 @@ class MilitaryDetails extends React.Component {
 
   static submitHandler = async values => {
     console.log('Values at MilitaryDetails:', values);
-    await updateUser(values);
+    await wait(1);
+    // await updateUser(values);
   };
 
   render() {

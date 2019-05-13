@@ -8,6 +8,7 @@ import { validationErrorMessages } from 'common/constants/messages';
 import { minimumPasswordLength } from 'common/constants/validations';
 import { isMinPasswordStrength, isValidZipcode } from 'common/utils/validator-utils';
 import Input from 'components/Form/Input/Input';
+import wait from 'test-utils/wait';
 import styles from './_steps.css';
 
 class Initial extends React.Component {
@@ -47,7 +48,9 @@ class Initial extends React.Component {
   };
 
   static submitHandler = async values => {
-    await createUser(values);
+    console.log('values at Initial', values);
+    await wait(1);
+    // await createUser(values);
   };
 
   render() {

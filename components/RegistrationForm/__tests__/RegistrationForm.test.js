@@ -8,7 +8,7 @@ import mockPassword from 'test-utils/mockGenerators/mockPassword';
 import OperationCodeAPIMock from 'test-utils/mocks/apiMock';
 import asyncRenderDiff from 'test-utils/asyncRenderDiff';
 import wait from 'test-utils/wait';
-import RegistrationForm from '../RegistrationForm';
+import { RegistrationForm } from '../RegistrationForm';
 
 afterEach(() => {
   OperationCodeAPIMock.reset();

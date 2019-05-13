@@ -1,13 +1,23 @@
 import React from 'react';
 import { string, bool, func, number, shape, arrayOf, oneOfType, objectOf } from 'prop-types';
+import classNames from 'classnames';
 import { ErrorMessage } from 'formik';
 import Alert from 'components/Alert/Alert';
 import Label from 'components/Form/Label/Label';
 import ThemedReactSelect from './ThemedReactSelect';
 import styles from './Select.css';
 
+/**
+ * An object representing the application's visual breakpoints.
+ * @typedef {{
+ * label: string,
+ * value: string,
+ * }} Option
+ */
+
 class Select extends React.Component {
   static propTypes = {
+    className: string,
     field: shape({
       name: string.isRequired,
       value: oneOfType([
@@ -30,6 +40,7 @@ class Select extends React.Component {
   };
 
   static defaultProps = {
+    className: undefined,
     id: '',
     isLabelHidden: false,
     isMulti: false,
@@ -38,7 +49,7 @@ class Select extends React.Component {
   /**
    * @memberof Select
    * @description handle changing of non-multi select
-   * @param {string} selected
+   * @param {Option} selected
    */
   onChangeSingle = selected => {
     const { field, form } = this.props;
@@ -49,7 +60,7 @@ class Select extends React.Component {
   /**
    * @memberof Select
    * @description handle changing of multi select
-   * @param {string[]} selectedArray
+   * @param {Option[]} selectedArray
    */
   onChangeMulti = selectedArray => {
     const { field, form } = this.props;
@@ -87,7 +98,8 @@ class Select extends React.Component {
 
   render() {
     const {
-      field: { name },
+      className,
+      field,
       form: { errors, touched },
       id,
       isLabelHidden,
@@ -97,6 +109,7 @@ class Select extends React.Component {
       ...props // disabled, placeholder, etc.
     } = this.props;
 
+    const { name } = field;
     const hasErrors = Boolean(errors[name]);
 
     // handlers and value depend on whether or not select allows for multiple selections.
@@ -104,13 +117,14 @@ class Select extends React.Component {
     const onChangeHandler = isMulti ? this.onChangeMulti : this.onChangeSingle;
 
     return (
-      <div className={styles.field}>
+      <div className={classNames(styles.field, className)}>
         <Label for={name} isHidden={isLabelHidden}>
           {label}
         </Label>
 
         <div>
           <ThemedReactSelect
+            {...field}
             {...props}
             hasErrors={hasErrors}
             isTouched={touched[name]}

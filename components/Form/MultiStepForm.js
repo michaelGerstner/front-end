@@ -1,5 +1,5 @@
 import React from 'react';
-import { arrayOf, func, object } from 'prop-types';
+import { arrayOf, bool, func, object } from 'prop-types';
 import get from 'lodash/get';
 import noop from 'lodash/noop';
 import { Formik } from 'formik';
@@ -9,6 +9,7 @@ import { capitalizeFirstLetter } from 'common/utils/string-utils';
 import Button from 'components/Button/Button';
 import Form from 'components/Form/Form';
 import Alert from 'components/Alert/Alert';
+import ScreenReaderOnly from 'components/ScreenReaderOnly/ScreenReaderOnly';
 import styles from './MultiStepForm.css';
 
 class MultiStepForm extends React.Component {
@@ -16,14 +17,15 @@ class MultiStepForm extends React.Component {
     // initialValues must be object where entire form's shape is described
     initialValues: object.isRequired,
 
-    onAllButLastStep: func,
+    isMobileView: bool.isRequired,
+    onAllButLastStepSubmit: func,
     onFinalSubmit: func.isRequired,
     onFinalSubmitSuccess: func.isRequired,
     steps: arrayOf(validStep).isRequired,
   };
 
   static defaultProps = {
-    onAllButLastStep: noop,
+    onAllButLastStepSubmit: noop,
   };
 
   state = {
@@ -89,7 +91,7 @@ class MultiStepForm extends React.Component {
   };
 
   handleSubmit = async (values, formikBag) => {
-    const { steps, onAllButLastStep, onFinalSubmit, onFinalSubmitSuccess } = this.props;
+    const { steps, onAllButLastStepSubmit, onFinalSubmit, onFinalSubmitSuccess } = this.props;
     const { errorMessage, stepNumber } = this.state;
 
     if (errorMessage) {
@@ -115,7 +117,7 @@ class MultiStepForm extends React.Component {
       const currentStepSubmitHandler = steps[stepNumber].submitHandler;
       await currentStepSubmitHandler(values);
 
-      await onAllButLastStep(values);
+      await onAllButLastStepSubmit(values);
 
       formikBag.setSubmitting(false);
       this.showNextStep(formikBag);
@@ -126,7 +128,7 @@ class MultiStepForm extends React.Component {
   };
 
   render() {
-    const { initialValues, steps } = this.props;
+    const { initialValues, isMobileView, steps } = this.props;
     const { errorMessage, stepNumber } = this.state;
 
     const CurrentStep = steps[stepNumber];
@@ -139,12 +141,7 @@ class MultiStepForm extends React.Component {
         onSubmit={this.handleSubmit}
         render={formikBag => (
           <Form className={styles.MultiStepForm} onSubmit={formikBag.handleSubmit}>
-            {/*
-             * If a step has to have props passed to its component, it needs to be passed in as an
-             * object with a render prop passed (and initialValues and submitHandler
-             * mapped)
-             */}
-            {CurrentStep.render ? CurrentStep.render(...formikBag) : <CurrentStep {...formikBag} />}
+            <CurrentStep {...formikBag} />
 
             <div className={styles.errorMessage}>
               <Alert isOpen={Boolean(errorMessage)} type="error">
@@ -153,13 +150,20 @@ class MultiStepForm extends React.Component {
             </div>
 
             <div className={styles.buttonGrouping}>
-              {stepNumber > 0 && (
+              {!isFirstStep && (
                 <Button
                   theme="secondary"
                   disabled={formikBag.isSubmitting}
                   onClick={() => this.showPreviousStep(formikBag)}
                 >
-                  « Previous
+                  {isMobileView ? (
+                    <>
+                      <ScreenReaderOnly>Previous</ScreenReaderOnly>
+                      {'←'}
+                    </>
+                  ) : (
+                    '← Previous'
+                  )}
                 </Button>
               )}
 
@@ -174,7 +178,14 @@ class MultiStepForm extends React.Component {
                   disabled={formikBag.isSubmitting}
                   fullWidth={isFirstStep}
                 >
-                  Next »
+                  {isMobileView && !isFirstStep ? (
+                    <>
+                      <ScreenReaderOnly>Next</ScreenReaderOnly>
+                      {'→'}
+                    </>
+                  ) : (
+                    'Next →'
+                  )}
                 </Button>
               )}
             </div>

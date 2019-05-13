@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { updateUser } from 'common/constants/api';
 import { mapStringsToSelectOptions } from 'common/utils/array-utils';
 import Select from 'components/Form/Select/Select';
+import wait from 'test-utils/wait';
 import styles from './_steps.css';
 
 const programmingLanguages = [
@@ -49,19 +50,20 @@ class Technology extends React.Component {
   });
 
   static initialValues = {
-    programmingLanguages: [],
-    disciplines: [],
+    programmingLanguages: [''],
+    disciplines: [''],
   };
 
   static submitHandler = async values => {
     console.log('Values at Technology:', values);
-    await updateUser(values);
+    await wait(1);
+    // await updateUser(values);
   };
 
   render() {
     const { isSubmitting } = this.props;
 
-    const programmingLanguageOptions = [...mapStringsToSelectOptions(programmingLanguageOptions)];
+    const programmingLanguageOptions = [...mapStringsToSelectOptions(programmingLanguages)];
     const disciplineOptions = [...mapStringsToSelectOptions(disciplines)];
 
     return (
@@ -76,14 +78,11 @@ class Technology extends React.Component {
             component={Select}
             isMulti
             options={[
-              {
-                value: '',
-                label: '-- Select One --',
-              },
               ...programmingLanguageOptions,
               // TODO: investigate creatable
             ]}
             disabled={isSubmitting}
+            placeholder="Select at least one..."
           />
         </div>
 
@@ -95,14 +94,11 @@ class Technology extends React.Component {
             component={Select}
             isMulti
             options={[
-              {
-                value: '',
-                label: '-- Select One --',
-              },
               ...disciplineOptions,
               // TODO: investigate creatable
             ]}
             disabled={isSubmitting}
+            placeholder="Select at least one..."
           />
         </div>
       </>

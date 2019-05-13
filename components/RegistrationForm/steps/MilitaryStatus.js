@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { updateUser } from 'common/constants/api';
 import { validationErrorMessages } from 'common/constants/messages';
 import Select from 'components/Form/Select/Select';
+import wait from 'test-utils/wait';
 import styles from './_steps.css';
 
 class MilitaryStatus extends React.Component {
@@ -26,7 +27,8 @@ class MilitaryStatus extends React.Component {
 
   static submitHandler = async values => {
     console.log('Values at Military Status:', values);
-    await updateUser(values);
+    await wait(1);
+    // await updateUser(values);
   };
 
   render() {
@@ -45,10 +47,6 @@ class MilitaryStatus extends React.Component {
             label="Military Status*"
             component={Select}
             options={[
-              {
-                value: '',
-                label: '-- Select One --',
-              },
               {
                 value: 'current',
                 label: 'Currently Serving',
